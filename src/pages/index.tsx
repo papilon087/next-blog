@@ -2,6 +2,7 @@ import { CardPost } from "@/components/CardPost";
 import { Header } from "@/components/Header";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,7 +15,11 @@ export default function Home() {
 
       <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12">
         <Header />
-        <div className="w-full h-full flex gap-8 items-center justify-center mt-12">
+
+        <Link
+          href={"/post"}
+          className="w-full h-full flex gap-8 items-center justify-center mt-12"
+        >
           <div className="flex flex-1 h-[334px] relative rounded-2xl overflow-hidden">
             <Image
               src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
@@ -41,12 +46,9 @@ export default function Home() {
               <p className="text-zinc-600 text-sm">31 de Janeiro de 2023</p>
             </div>
           </div>
-        </div>
+        </Link>
 
         <div className="grid grid-cols-3 gap-8 mt-12">
-          <CardPost />
-          <CardPost />
-          <CardPost />
           <CardPost />
         </div>
       </div>

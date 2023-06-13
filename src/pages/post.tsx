@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Post() {
   return (
@@ -14,6 +15,13 @@ export default function Post() {
       <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12">
         <Header />
 
+        <Link
+          href="/"
+          className="flex w-full max-w-fit px-4 font-bold text-zinc-900 hover:text-zinc-600"
+        >
+          Voltar
+        </Link>
+
         <div className="w-full h-full flex flex-col mt-8">
           <div className="flex w-full h-[392px] relative rounded-2xl overflow-hidden">
             <Image
@@ -23,21 +31,21 @@ export default function Post() {
               style={{ objectFit: "cover" }}
             />
           </div>
-        </div>
 
-        <div className="flex w-full flex-col mt-8">
-          <h1 className="font-bold text-[40px] text-blue-600">
-            Como desenvolver um Blog com Next.js
-          </h1>
-          <div>
-            <p className="font-bold text-zinc-900">Ademir Gustavo</p>
-            <p className="text-zinc-600 text-sm">31 de Janeiro de 2023</p>
+          <div className="flex w-full flex-col mt-8">
+            <h1 className="font-bold text-[40px] text-blue-600">
+              Como desenvolver um Blog com Next.js
+            </h1>
+            <div>
+              <p className="font-bold text-zinc-900">Ademir Gustavo</p>
+              <p className="text-zinc-600 text-sm">31 de Janeiro de 2023</p>
+            </div>
+            <p className="text-zinc-600 mt-8">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac
+              velit sit amet tortor vulputate ultricies id nec arcu. Maecenas ut
+              consequat justo.
+            </p>
           </div>
-          <p className="text-zinc-600 mt-8">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac
-            velit sit amet tortor vulputate ultricies id nec arcu. Maecenas ut
-            consequat justo.
-          </p>
         </div>
       </div>
     </>
