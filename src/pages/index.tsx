@@ -1,11 +1,51 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { gql, useQuery } from '@apollo/client'
 
 import { CardPost } from "@/components/CardPost";
 import { Header } from "@/components/Header";
 
 export default function Home() {
+
+  const GET_ALL_POST = gql`
+    query GetAllPost {
+      posts {
+        id
+        slug
+        subtile
+        title
+        createdAt
+        coverImage {
+          url
+        }
+        author {
+          name
+        }
+      }
+    }
+  `
+
+  interface AllPost {
+    posts: {
+      id: string;
+      slug: string;
+      subtitle: string;
+      title: string;
+      createdAt: string;
+      coverImage: {
+        url: string;
+      }
+      author: {
+        name: string
+      }
+    }[]
+  }
+
+  const { loading, data, error } = useQuery<AllPost>(GET_ALL_POST) 
+
+  console.log(data?.posts)
+
   return (
     <>
       <Head>
