@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import { format } from "date-fns"
+import ptBR from "date-fns/locale/pt-BR";
 interface CardPostProps {
   title: string;
   subtile: string;
@@ -37,7 +38,7 @@ export function CardPost({ author, createdAt, subtile, title, urlImage }: CardPo
             {author}
           </p>
           <p className="text-zinc-600 text-xs md:text-sm">
-            {createdAt}
+          {format(new Date(createdAt), "dd 'de' MMM 'de' yyyy")}
           </p>
         </div>
       </div>

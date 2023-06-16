@@ -2,6 +2,8 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { gql, useQuery } from '@apollo/client'
+import { format } from "date-fns"
+import ptBR from "date-fns/locale/pt-BR";
 
 import { CardPost } from "@/components/CardPost";
 import { Header } from "@/components/Header";
@@ -87,7 +89,7 @@ export default function Home() {
                   {data?.posts[0].title}
                 </p>
                 <p className="text-zinc-600 text-xs md:text-sm">
-                  {data?.posts[0].createdAt}
+                  {format(new Date(data?.posts[0].createdAt), "dd 'de' MMM 'de' yyyy")}
                 </p>
               </div>
             </div>
