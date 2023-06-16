@@ -5,12 +5,13 @@ import { gql, useQuery } from '@apollo/client'
 
 import { CardPost } from "@/components/CardPost";
 import { Header } from "@/components/Header";
+import { Loading } from "@/components/Loading";
 
 export default function Home() {
 
   const GET_ALL_POST = gql`
     query GetAllPost {
-      posts {
+      posts(orderBy: createdAt_DESC) {
         id
         slug
         subtile
@@ -30,7 +31,7 @@ export default function Home() {
     posts: {
       id: string;
       slug: string;
-      subtitle: string;
+      subtile: string;
       title: string;
       createdAt: string;
       coverImage: {
@@ -44,7 +45,7 @@ export default function Home() {
 
   const { loading, data, error } = useQuery<AllPost>(GET_ALL_POST) 
 
-  console.log(data?.posts)
+  if (loading) return <Loading />
 
   return (
     <>
@@ -63,7 +64,7 @@ export default function Home() {
         >
           <div className="flex flex-1 w-full h-full min-h-[240px] md:min-h-[334px] relative rounded-2xl overflow-hidden">
             <Image
-              src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+              src={data?.posts[0].coverImage.url}
               alt=""
               fill={true}
               style={{ objectFit: "cover" }}
@@ -72,35 +73,38 @@ export default function Home() {
 
           <div className="flex flex-1 h-full flex-col gap-3 lg:gap-6">
             <h1 className="font-bold text-3xl md:text-[40px] text-blue-600">
-              Como desenvolver um Blog com Next.js
+              {data?.posts[0].title}
             </h1>
             <p className="text-zinc-600 text-sm md:text-base text-justify lg:text-left">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac
-              velit sit amet tortor vulputate ultricies id nec arcu. Maecenas ut
-              consequat justo. Sed consequat eleifend tortor, ac pharetra ex
-              placerat non. Duis rhoncus eu lacus vel bibendum. Nunc euismod
-              odio id elementum scelerisque.
+            {data?.posts[0].subtile}
             </p>
 
             <div>
               <p className="font-bold text-zinc-900 text-sm md:text-base">
-                Ademir Gustavo
+                {data?.posts[0].title}
               </p>
               <p className="text-zinc-600 text-xs md:text-sm">
-                31 de Janeiro de 2023
+                {data?.posts[0].createdAt}
               </p>
             </div>
           </div>
         </Link>
 
         <div className="flex flex-col items-center sm:grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-8 mt-12">
-          <CardPost />
-          <CardPost />
-          <CardPost />
-          <CardPost />
-          <CardPost />
-          <CardPost />
-          <CardPost />
+          {data?.posts.map((post, index) => {
+            if (index !== 0) {
+              return (
+                <CardPost 
+                  key={post.id}
+                  title={post.title}
+                  author={post.author.name}
+                  createdAt={post.createdAt}
+                  subtile={post.subtile}
+                  urlImage={post.coverImage.url}
+                />  
+              )
+            }
+          })}
         </div>
       </div>
     </>
