@@ -1,54 +1,52 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { gql, useQuery } from '@apollo/client'
-import { format } from "date-fns"
-import ptBR from "date-fns/locale/pt-BR";
+import { GetServerSideProps } from "next";
+import { gql, useQuery } from "@apollo/client";
+import { client } from "@/lib/apollo";
+import { format } from "date-fns";
 
 import { CardPost } from "@/components/CardPost";
 import { Header } from "@/components/Header";
 import { Loading } from "@/components/Loading";
 import { Empty } from "@/components/Empty";
 
-export default function Home() {
-
-  const GET_ALL_POST = gql`
-    query GetAllPost {
-      posts(orderBy: createdAt_DESC) {
-        id
-        slug
-        subtile
-        title
-        createdAt
-        coverImage {
-          url
-        }
-        author {
-          name
-        }
+const GET_ALL_POST = gql`
+  query GetAllPost {
+    posts(orderBy: createdAt_DESC) {
+      id
+      slug
+      subtile
+      title
+      createdAt
+      coverImage {
+        url
+      }
+      author {
+        name
       }
     }
-  `
-
-  interface AllPost {
-    posts: {
-      id: string;
-      slug: string;
-      subtile: string;
-      title: string;
-      createdAt: string;
-      coverImage: {
-        url: string;
-      }
-      author: {
-        name: string
-      }
-    }[]
   }
+`;
+interface AllPost {
+  posts: {
+    id: string;
+    slug: string;
+    subtile: string;
+    title: string;
+    createdAt: string;
+    coverImage: {
+      url: string;
+    };
+    author: {
+      name: string;
+    };
+  }[];
+}
+export default function Home({ posts }: AllPost) {
+  // const { loading, data, error } = useQuery<AllPost>(GET_ALL_POST);
 
-  const { loading, data, error } = useQuery<AllPost>(GET_ALL_POST) 
-
-  if (loading) return <Loading />
+  // if (loading) return <Loading />;
 
   return (
     <>
@@ -60,62 +58,74 @@ export default function Home() {
 
       <div className="w-full max-w-[1120px] flex flex-col mx-auto pb-12 px-4">
         <Header />
-      
-        {data ? 
+
+        {posts ? (
           <>
             <Link
-            href={"/post"}
-            className="w-full h-full flex gap-4 lg:gap-8 flex-col sm:flex-row items-center justify-center mt-12 hover:brightness-75 transition-all"
-          >
-            <div className="flex flex-1 w-full h-full min-h-[240px] md:min-h-[334px] relative rounded-2xl overflow-hidden">
-              <Image
-                src={data?.posts[0].coverImage.url}
-                alt=""
-                fill={true}
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-
-            <div className="flex flex-1 h-full flex-col gap-3 lg:gap-6">
-              <h1 className="font-bold text-3xl md:text-[40px] text-blue-600">
-                {data?.posts[0].title}
-              </h1>
-              <p className="text-zinc-600 text-sm md:text-base text-justify lg:text-left">
-              {data?.posts[0].subtile}
-              </p>
-
-              <div>
-                <p className="font-bold text-zinc-900 text-sm md:text-base">
-                  {data?.posts[0].title}
-                </p>
-                <p className="text-zinc-600 text-xs md:text-sm">
-                  {format(new Date(data?.posts[0].createdAt), "dd 'de' MMM 'de' yyyy")}
-                </p>
+              href={"/post"}
+              className="w-full h-full flex gap-4 lg:gap-8 flex-col sm:flex-row items-center justify-center mt-12 hover:brightness-75 transition-all"
+            >
+              <div className="flex flex-1 w-full h-full min-h-[240px] md:min-h-[334px] relative rounded-2xl overflow-hidden">
+                <Image
+                  src={posts[0].coverImage.url}
+                  alt=""
+                  fill={true}
+                  style={{ objectFit: "cover" }}
+                />
               </div>
-            </div>
-          </Link>
 
-          <div className="flex flex-col items-center sm:grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-8 mt-12">
-            {data?.posts.map((post, index) => {
-              if (index !== 0) {
-                return (
-                  <CardPost 
-                    key={post.id}
-                    title={post.title}
-                    author={post.author.name}
-                    createdAt={post.createdAt}
-                    subtile={post.subtile}
-                    urlImage={post.coverImage.url}
-                  />  
-                )
-              }
-            })}
-          </div>
-        </>
-        :
-        <Empty />
-       }
+              <div className="flex flex-1 h-full flex-col gap-3 lg:gap-6">
+                <h1 className="font-bold text-3xl md:text-[40px] text-blue-600">
+                  {posts[0].title}
+                </h1>
+                <p className="text-zinc-600 text-sm md:text-base text-justify lg:text-left">
+                  {posts[0].subtile}
+                </p>
+
+                <div>
+                  <p className="font-bold text-zinc-900 text-sm md:text-base">
+                    {posts[0].title}
+                  </p>
+                  <p className="text-zinc-600 text-xs md:text-sm">
+                    {format(
+                      new Date(posts[0].createdAt),
+                      "dd 'de' MMM 'de' yyyy"
+                    )}
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            <div className="flex flex-col items-center sm:grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-8 mt-12">
+              {posts.map((post, index) => {
+                if (index !== 0) {
+                  return (
+                    <CardPost
+                      key={post.id}
+                      title={post.title}
+                      author={post.author.name}
+                      createdAt={post.createdAt}
+                      subtile={post.subtile}
+                      urlImage={post.coverImage.url}
+                    />
+                  );
+                }
+              })}
+            </div>
+          </>
+        ) : (
+          <Empty />
+        )}
       </div>
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { data } = await client.query({ query: GET_ALL_POST });
+  return {
+    props: {
+      posts: data.posts,
+    },
+  };
+};
