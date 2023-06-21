@@ -1,8 +1,47 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { gql } from "@apollo/client";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { client } from "@/lib/apollo";
 
 import { Header } from "@/components/Header";
+
+const GET_POST = gql`
+  query GetPost($slugPost: String) {
+    post(where: { slug: $slugPost }) {
+      id
+      title
+      content {
+        json
+      }
+      author {
+        name
+      }
+      createdAt
+      coverImage {
+        url
+      }
+    }
+  }
+`;
+
+interface PostProps {
+  post: {
+    id: string;
+    title: string;
+    coverImage: {
+      url: string;
+    };
+    author: {
+      name: string;
+    };
+    createdAt: string;
+    content: {
+      json: [];
+    };
+  };
+}
 
 export default function Post() {
   return (
@@ -52,3 +91,26 @@ export default function Post() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const slug = ctx.params?.slug;
+
+  const { data } = await client.query({
+    query: GET_POST,
+    variables: {
+      slugPost: slug,
+    },
+  });
+  console.log(data);
+
+  return {
+    props: {},
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: true,
+  };
+};

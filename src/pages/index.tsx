@@ -44,10 +44,6 @@ interface AllPost {
   }[];
 }
 export default function Home({ posts }: AllPost) {
-  // const { loading, data, error } = useQuery<AllPost>(GET_ALL_POST);
-
-  // if (loading) return <Loading />;
-
   return (
     <>
       <Head>
