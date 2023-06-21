@@ -58,7 +58,7 @@ export default function Home({ posts }: AllPost) {
         {posts ? (
           <>
             <Link
-              href={"/post"}
+              href={`/post/${posts[0].slug}`}
               className="w-full h-full flex gap-4 lg:gap-8 flex-col sm:flex-row items-center justify-center mt-12 hover:brightness-75 transition-all"
             >
               <div className="flex flex-1 w-full h-full min-h-[240px] md:min-h-[334px] relative rounded-2xl overflow-hidden">
@@ -103,6 +103,7 @@ export default function Home({ posts }: AllPost) {
                       createdAt={post.createdAt}
                       subtile={post.subtile}
                       urlImage={post.coverImage.url}
+                      slug={post.slug}
                     />
                   );
                 }

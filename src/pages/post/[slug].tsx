@@ -5,6 +5,8 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { gql } from "@apollo/client";
 import { client } from "@/lib/apollo";
 import { format } from "date-fns";
+import { RichText } from "@graphcms/rich-text-react-renderer";
+import { ElementNode } from "@graphcms/rich-text-types";
 
 import { Header } from "@/components/Header";
 
@@ -39,7 +41,7 @@ interface PostProps {
     };
     createdAt: string;
     content: {
-      json: [];
+      json: ElementNode[];
     };
   };
 }
@@ -84,11 +86,20 @@ export default function Post({ post }: PostProps) {
                 {format(new Date(post.createdAt), "dd 'de' MMM 'de' yyyy")}
               </p>
             </div>
-            <p className="text-zinc-600 text-sm sm:text-base text-justify lg:text-left mt-4 sm:mt-8">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac
-              velit sit amet tortor vulputate ultricies id nec arcu. Maecenas ut
-              consequat justo.
-            </p>
+
+            <div className="mt-4 sm:mt-8">
+              <RichText
+                content={post.content.json}
+                renderers={{
+                  p: ({ children }) => (
+                    <p className="text-zinc-600 text-sm sm:text-base text-justify lg:text-left mt-1">
+                      {children}
+                    </p>
+                  ),
+                }}
+              />
+            </div>
+            {/* <p className="text-zinc-600 text-sm sm:text-base text-justify lg:text-left mt-4 sm:mt-8"></p> */}
           </div>
         </div>
       </div>
